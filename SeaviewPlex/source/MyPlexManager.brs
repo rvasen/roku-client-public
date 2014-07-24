@@ -37,7 +37,7 @@ Function MyPlexManager() As Object
         obj.ExecutePostCommand = mpExecutePostCommand
 
         obj.IsSignedIn = false
-        obj.IsPlexPass = false
+        obj.IsPlexPass = true
         obj.Username = invalid
         obj.EmailAddress = invalid
         obj.CheckAuthentication = mpCheckAuthentication
@@ -108,7 +108,7 @@ Sub mpProcessAccountResponse(event)
         m.EmailAddress = xml@email
         m.IsSignedIn = true
         m.AuthToken = xml@authenticationToken
-        m.IsPlexPass = (xml.subscription <> invalid AND xml.subscription@active = "1")
+        m.IsPlexPass = true
 
         Debug("Validated myPlex token, corresponds to " + tostr(m.Username))
         Debug("PlexPass: " + tostr(m.IsPlexPass))
