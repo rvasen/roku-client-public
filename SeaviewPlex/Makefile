@@ -20,7 +20,7 @@ APPDEPS = manifest count_functions
 ZIP_EXCLUDE = -x .git\* -x manifest.template -x \*.swp -x \*.DS_Store -x \*.py -x roku_screenshot.jpg
 include ../app.mk
 
-APPTITLE = PlexDev
+APPTITLE = SeaviewPlex
 
 num_functions := $(shell grep -ri --include=*.brs 'end \(function\|sub\)' . | wc -l | tr -d ' ')
 
@@ -32,10 +32,10 @@ beta: $(APPNAME)
 test: APPTITLE = PlexTest
 test: $(APPNAME)
 
-dev: APPTITLE = PlexDev
+dev: APPTITLE = SeaviewPlex
 dev: $(APPNAME)
 
-rel: APPTITLE = Plex
+rel: APPTITLE = SeaviewPlex
 rel: $(APPNAME)
 
 manifest:
