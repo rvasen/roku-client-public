@@ -35,13 +35,7 @@ Function createHomeScreenDataLoader(listener)
     loader.FirstServer = true
 
     rows = [
-        { title: "Channels", key: "channels" },
         { title: "Library Sections", key: "sections" },
-        { title: "On Deck", key: "on_deck" },
-        { title: "Recently Added", key: "recently_added" },
-        { title: "Queue", key: "queue" },
-        { title: "Recommendations", key: "recommendations" },
-        { title: "Shared Library Sections", key: "shared_sections" },
         { title: "Miscellaneous", key: "misc" }
     ]
     ReorderItemsByKeyPriority(rows, RegRead("home_row_order", "preferences", ""))
@@ -142,63 +136,9 @@ Sub homeCreateServerRequests(server As Object, startRequests As Boolean, refresh
     if server.owned then
         m.AddOrStartRequest(sections, m.RowIndexes["sections"], startRequests)
     else
-        m.AddOrStartRequest(sections, m.RowIndexes["shared_sections"], startRequests)
         return
     end if
 
-    ' Request recently used channels
-    view = RegRead("row_visibility_channels", "preferences", "")
-    if view <> "hidden" then
-        channels = CreateObject("roAssociativeArray")
-        channels.server = server
-        channels.key = "/channels/recentlyViewed"
-        channels.connectionUrl = connectionUrl
-
-        allChannels = CreateObject("roAssociativeArray")
-        allChannels.Title = "More Channels"
-        if AreMultipleValidatedServers() then
-            allChannels.ShortDescriptionLine2 = "All channels on " + server.name
-        else
-            allChannels.ShortDescriptionLine2 = "All channels"
-        end if
-        allChannels.Description = allChannels.ShortDescriptionLine2
-        allChannels.server = server
-        allChannels.sourceUrl = ""
-        allChannels.Key = "/channels/all"
-        allChannels.connectionUrl = connectionUrl
-        allChannels.SDPosterURL = "file://pkg:/images/more.png"
-        allChannels.HDPosterURL = "file://pkg:/images/more.png"
-        channels.item = allChannels
-        m.AddOrStartRequest(channels, m.RowIndexes["channels"], startRequests)
-    else
-        m.Listener.OnDataLoaded(m.RowIndexes["channels"], [], 0, 0, true)
-    end if
-
-    ' Request global on deck
-    view = RegRead("row_visibility_ondeck", "preferences", "")
-    if view <> "hidden" then
-        onDeck = CreateObject("roAssociativeArray")
-        onDeck.server = server
-        onDeck.key = "/library/onDeck"
-        onDeck.connectionUrl = connectionUrl
-        onDeck.requestType = "media"
-        m.AddOrStartRequest(onDeck, m.RowIndexes["on_deck"], startRequests)
-    else
-        m.Listener.OnDataLoaded(m.RowIndexes["on_deck"], [], 0, 0, true)
-    end if
-
-    ' Request recently added
-    view = RegRead("row_visibility_recentlyadded", "preferences", "")
-    if view <> "hidden" then
-        recents = CreateObject("roAssociativeArray")
-        recents.server = server
-        recents.key = "/library/recentlyAdded"
-        recents.connectionUrl = connectionUrl
-        recents.requestType = "media"
-        m.AddOrStartRequest(recents, m.RowIndexes["recently_added"], startRequests)
-    else
-        m.Listener.OnDataLoaded(m.RowIndexes["recently_added"], [], 0, 0, true)
-    end if
 End Sub
 
 Sub homeCreateMyPlexRequests(startRequests As Boolean)
@@ -222,8 +162,6 @@ End Sub
 Sub homeCreateAllPlaylistRequests(startRequests As Boolean)
     if NOT MyPlexManager().IsSignedIn then return
 
-    m.CreatePlaylistRequests("queue", "All Queued Items", "All queued items, including already watched items", m.RowIndexes["queue"], startRequests)
-    m.CreatePlaylistRequests("recommendations", "All Recommended Items", "All recommended items, including already watched items", m.RowIndexes["recommendations"], startRequests)
 End Sub
 
 Sub homeCreatePlaylistRequests(name, title, description, row, startRequests)
@@ -315,11 +253,6 @@ Function homeLoadMoreContent(focusedIndex, extraRows=0)
     myPlex = MyPlexManager()
     if m.FirstLoad then
         m.FirstLoad = false
-        if NOT myPlex.IsSignedIn then
-            m.Listener.OnDataLoaded(m.RowIndexes["queue"], [], 0, 0, true)
-            m.Listener.OnDataLoaded(m.RowIndexes["recommendations"], [], 0, 0, true)
-            m.Listener.OnDataLoaded(m.RowIndexes["shared_sections"], [], 0, 0, true)
-        end if
 
         m.Listener.hasBeenFocused = false
         m.Listener.ignoreNextFocus = true
@@ -817,12 +750,6 @@ Sub homeRefreshData()
     ' Refresh the sections and channels for all of our owned servers
     m.contentArray[m.RowIndexes["sections"]].refreshContent = []
     m.contentArray[m.RowIndexes["sections"]].loadedServers.Clear()
-    m.contentArray[m.RowIndexes["channels"]].refreshContent = []
-    m.contentArray[m.RowIndexes["channels"]].loadedServers.Clear()
-    m.contentArray[m.RowIndexes["on_deck"]].refreshContent = []
-    m.contentArray[m.RowIndexes["on_deck"]].loadedServers.Clear()
-    m.contentArray[m.RowIndexes["recently_added"]].refreshContent = []
-    m.contentArray[m.RowIndexes["recently_added"]].loadedServers.Clear()
 
     for each server in GetOwnedPlexMediaServers()
         m.CreateServerRequests(server, true, true)
@@ -839,21 +766,12 @@ Sub homeOnMyPlexChange()
         m.CreateMyPlexRequests(true)
     else
         m.RemoveFromRowIf(m.RowIndexes["sections"], IsMyPlexServer)
-        m.RemoveFromRowIf(m.RowIndexes["channels"], IsMyPlexServer)
-        m.RemoveFromRowIf(m.RowIndexes["on_deck"], IsMyPlexServer)
-        m.RemoveFromRowIf(m.RowIndexes["recently_added"], IsMyPlexServer)
         m.RemoveFromRowIf(m.RowIndexes["misc"], IsMyPlexServer)
-        m.RemoveFromRowIf(m.RowIndexes["queue"], AlwaysTrue)
-        m.RemoveFromRowIf(m.RowIndexes["recommendations"], AlwaysTrue)
-        m.RemoveFromRowIf(m.RowIndexes["shared_sections"], AlwaysTrue)
     end if
 End Sub
 
 Sub homeRemoveInvalidServers()
     m.RemoveFromRowIf(m.RowIndexes["sections"], IsInvalidServer)
-    m.RemoveFromRowIf(m.RowIndexes["channels"], IsInvalidServer)
-    m.RemoveFromRowIf(m.RowIndexes["on_deck"], IsInvalidServer)
-    m.RemoveFromRowIf(m.RowIndexes["recently_added"], IsInvalidServer)
     m.RemoveFromRowIf(m.RowIndexes["misc"], IsInvalidServer)
 End Sub
 
