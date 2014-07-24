@@ -6,21 +6,13 @@ Function AppManager()
         obj.productCode = "plexunlock"
 
         ' The unlocked state of the app, one of: PlexPass, Exempt, Purchased, Trial, or Limited
-        obj.IsPlexPass = false
-        obj.IsPurchased = (RegRead("purchased", "misc", "0") = "1")
+        obj.IsPlexPass = true
+        obj.IsPurchased = true
         obj.IsAvailableForPurchase = false
-        obj.IsExempt = false
+        obj.IsExempt = true
+        obj.IsInTrialWindow = true
 
         obj.firstPlaybackTimestamp = RegRead("first_playback_timestamp", "misc")
-        if obj.firstPlaybackTimestamp <> invalid then
-            currentTime = Now().AsSeconds()
-            firstPlayback = obj.firstPlaybackTimestamp.toint()
-            trialDuration = 30 * 24 * 60 * 60 ' 30 days
-            obj.IsInTrialWindow = (currentTime - firstPlayback < trialDuration)
-        else
-            ' The user hasn't tried to play any media yet, still in trial.
-            obj.IsInTrialWindow = true
-        end if
 
         obj.ResetState = managerResetState
         obj.ResetState()
