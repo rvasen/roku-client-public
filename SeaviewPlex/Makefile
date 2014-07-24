@@ -15,7 +15,7 @@
 #    address of your Roku box. (e.g. export ROKU_DEV_TARGET=192.168.1.1.
 #    Set in your this variable in your shell startup (e.g. .bashrc)
 ##########################################################################  
-APPNAME = Plex
+APPNAME = SeaviewPlex
 APPDEPS = manifest count_functions
 ZIP_EXCLUDE = -x .git\* -x manifest.template -x \*.swp -x \*.DS_Store -x \*.py -x roku_screenshot.jpg
 include ../app.mk

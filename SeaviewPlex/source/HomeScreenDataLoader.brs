@@ -606,23 +606,6 @@ Sub homeOnUrlEvent(msg, requestContext)
             if server.owned AND NOT duplicate then
                 status = m.contentArray[m.RowIndexes["misc"]]
                 machineId = tostr(server.machineID)
-                if NOT server.IsSecondary AND NOT status.loadedServers.DoesExist(machineID) then
-                    status.loadedServers[machineID] = "1"
-                    channelDir = CreateObject("roAssociativeArray")
-                    channelDir.server = server
-                    channelDir.sourceUrl = ""
-                    channelDir.key = "/system/appstore"
-                    channelDir.Title = "Channel Directory"
-                    if AreMultipleValidatedServers() then
-                        channelDir.ShortDescriptionLine2 = "Browse channels to install on " + server.name
-                    else
-                        channelDir.ShortDescriptionLine2 = "Browse channels to install"
-                    end if
-                    channelDir.Description = channelDir.ShortDescriptionLine2
-                    channelDir.SDPosterURL = "file://pkg:/images/more.png"
-                    channelDir.HDPosterURL = "file://pkg:/images/more.png"
-                    status.content.Push(channelDir)
-                end if
 
                 if m.FirstServer then
                     m.FirstServer = false
