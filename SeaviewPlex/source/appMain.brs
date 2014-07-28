@@ -4,6 +4,7 @@
 ' ********************************************************************
 
 Sub Main(args)
+    splashVideo()
     m.RegistryCache = CreateObject("roAssociativeArray")
 
     ' Process any launch args (set registry values)
@@ -57,6 +58,33 @@ Sub Main(args)
     'prepare the screen for display and get ready to begin
     controller = createViewController()
     controller.Show()
+End Sub
+
+Sub splashVideo()
+    canvas = CreateObject("roImageCanvas")
+    canvas.SetLayer(0, { color: "#00000000", CompositionMode: "Source" })
+    canvas.show()
+
+    player = CreateObject("roVideoPlayer")
+    messagePort = CreateObject("roMessagePort")
+    player.SetMessagePort(messagePort)
+    player.SetDestinationRect(canvas.GetCanvasRect())
+    player.SetContentList([{
+        'Stream: {url: "https://dl.dropboxusercontent.com/s/npvg30ydmul6uhd/SeaviewAnimeIntro1.mp4"}
+        'Stream: {url: "http://video.ted.com/talks/podcast/Naturally7FLYBABY_2009_480.mp4"}
+        Stream: {url: "pkg:/videos/SeaviewAnimeIntro1.mp4"}
+        StreamFormat: "mp4"
+    }])
+    player.Play()
+    while true
+        msg = wait(0, messagePort)
+        if type(msg) = "roVideoPlayerEvent" then
+            if msg.isFullResult() then
+                'canvas.close()
+                exit while
+            end if
+        end if
+    end while
 End Sub
 
 Sub initGlobals()
@@ -183,23 +211,23 @@ Sub initTheme()
     theme.OverhangOffsetSD_X = "42"
     theme.OverhangOffsetSD_Y = "27"
     theme.OverhangSliceSD = "pkg:/images/Background_SD.jpg"
-    theme.OverhangLogoSD  = "pkg:/images/logo_final_SD.png"
+    theme.OverhangLogoSD  = "pkg:/images/seaview_final_SD.png"
 
     theme.OverhangOffsetHD_X = "70"
-    theme.OverhangOffsetHD_Y = "28"
+    theme.OverhangOffsetHD_Y = "0"
     theme.OverhangSliceHD = "pkg:/images/Background_HD.jpg"
-    theme.OverhangLogoHD  = "pkg:/images/logo_final_HD.png"
+    theme.OverhangLogoHD  = "pkg:/images/seaview_final_HD.png"
 
     theme.GridScreenLogoOffsetHD_X = "70"
-    theme.GridScreenLogoOffsetHD_Y = "28"
+    theme.GridScreenLogoOffsetHD_Y = "0"
     theme.GridScreenOverhangSliceHD = "pkg:/images/Background_HD.jpg"
-    theme.GridScreenLogoHD  = "pkg:/images/logo_final_HD.png"
+    theme.GridScreenLogoHD  = "pkg:/images/seaview_final_HD.png"
     theme.GridScreenOverhangHeightHD = "124"
 
     theme.GridScreenLogoOffsetSD_X = "42"
     theme.GridScreenLogoOffsetSD_Y = "27"
     theme.GridScreenOverhangSliceSD = "pkg:/images/Background_SD.jpg"
-    theme.GridScreenLogoSD  = "pkg:/images/logo_final_SD.png"
+    theme.GridScreenLogoSD  = "pkg:/images/seaview_final_SD.png"
     theme.GridScreenOverhangHeightSD = "83"
 
     ' We want to use a dark background throughout, just like the default

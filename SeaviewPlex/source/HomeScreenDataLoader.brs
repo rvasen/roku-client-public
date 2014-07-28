@@ -771,7 +771,6 @@ Sub homeOnTimerExpired(timer)
 
         if RegRead("serverList", "servers") = invalid AND NOT MyPlexManager().IsSignedIn then
             Debug("No servers and no myPlex, appears to be a first run")
-            GetViewController().ShowHelpScreen()
             status = m.contentArray[m.RowIndexes["misc"]]
             status.loadStatus = 2
             m.Listener.OnDataLoaded(m.RowIndexes["misc"], status.content, 0, status.content.Count(), true)
