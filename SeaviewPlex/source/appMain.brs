@@ -80,7 +80,9 @@ Sub splashVideo()
         msg = wait(0, messagePort)
         if type(msg) = "roVideoPlayerEvent" then
             if msg.isFullResult() then
-                'canvas.close()
+                Debug("Video ended")
+                wait(5, messagePort)
+                canvas.close()
                 exit while
             end if
         end if
