@@ -26,7 +26,7 @@ Function createVideoSpringboardScreen(context, index, viewController) As Object
     ]
     obj.PlayButtonState = RegRead("directplay", "preferences", "0").toint()
 
-    obj.ContinuousPlay = (RegRead("continuous_play", "preferences") = "1")
+    obj.ContinuousPlay = (RegRead("continuous_play", "preferences", "1") = "1")
 
     return obj
 End Function

@@ -56,10 +56,11 @@ Sub Main(args)
     initGlobals()
 
     'play animation and then prepare the screen for display and get ready to begin
-    splashVideo()
+    controller = splashVideo()
+    controller.Show()
 End Sub
 
-Sub splashVideo()
+Function splashVideo() as Object
     canvas = CreateObject("roImageCanvas")
     canvas.SetLayer(0, { color: "#00000000", CompositionMode: "Source" })
     canvas.show()
@@ -79,15 +80,14 @@ Sub splashVideo()
         if type(msg) = "roVideoPlayerEvent" then
             if msg.isFullResult() then
                 controller = createViewController()
-                controller.Show()
                 player.Stop()
-                canvas.close()
+                canvas.Close()
                 exit while
            end if
        end if
     end while
-
-End Sub
+    return controller
+End Function
 
 Sub initGlobals()
     device = CreateObject("roDeviceInfo")

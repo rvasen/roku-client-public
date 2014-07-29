@@ -1,7 +1,6 @@
-
 Sub RunScreenSaver()
     m.RegistryCache = CreateObject("roAssociativeArray")
-    mode = RegRead("screensaver", "preferences", "random")
+    mode = RegRead("screensaver", "preferences", "animated")
 
     if mode <> "disabled" then
         initGlobals()
@@ -59,10 +58,6 @@ Function GetScreenSaverImage()
         m.ss_last_url = image.url
     end if
 
-    if left(image.url, 4) <> "pkg:" AND m.ss_timer.TotalSeconds() > 7200 then
-        SaveImagesForScreenSaver(invalid, {})
-    end if
-
     o = CreateObject("roAssociativeArray")
     o.art = image
     o.content_list = [image]
@@ -77,34 +72,3 @@ Function GetScreenSaverImage()
 
     return o
 End Function
-
-Sub SaveImagesForScreenSaver(item, sizes)
-    ' Passing a token to the screensaver through the tmp file and then
-    ' adding it to roImageCanvas requests as a header is (oddly) tricky,
-    ' so just add it to the URL.
-
-    if item <> invalid AND item.server <> invalid AND item.server.AccessToken <> invalid AND Left(item.HDPosterURL, 4) = "http" then
-        token = "&X-Plex-Token=" + item.server.AccessToken
-    else
-        token = ""
-    end if
-
-    if item = invalid then
-        WriteFileHelper("tmp:/plex_screensaver", invalid, invalid, invalid)
-    else if GetGlobal("IsHD") then
-        WriteFileHelper("tmp:/plex_screensaver", item.HDPosterURL + token, sizes.hdWidth, sizes.hdHeight)
-    else
-        WriteFileHelper("tmp:/plex_screensaver", item.SDPosterURL + token, sizes.sdWidth, sizes.sdHeight)
-    end if
-End Sub
-
-Sub WriteFileHelper(fname, url, width, height)
-    Debug("Saving image for screensaver: " + tostr(url))
-    if url <> invalid then
-        content = width + "\" + height + "\" + url
-        if (not WriteAsciiFile(fname + "~", content)) then Debug("WriteAsciiFile() Failed")
-        if (not MoveFile(fname + "~",fname)) then Debug("MoveFile() failed")
-    else
-        DeleteFile(fname)
-    end if
-End Sub
