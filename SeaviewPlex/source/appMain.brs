@@ -4,7 +4,6 @@
 ' ********************************************************************
 
 Sub Main(args)
-    splashVideo()
     m.RegistryCache = CreateObject("roAssociativeArray")
 
     ' Process any launch args (set registry values)
@@ -43,6 +42,7 @@ Sub Main(args)
             end if
         end if
     next
+
     if resetTimestamp then
         Debug("Extending trial period")
         RegWrite("first_playback_timestamp", tostr(Now().AsSeconds()), "misc")
@@ -55,9 +55,8 @@ Sub Main(args)
 
     initGlobals()
 
-    'prepare the screen for display and get ready to begin
-    controller = createViewController()
-    controller.Show()
+    'play animation and then prepare the screen for display and get ready to begin
+    splashVideo()
 End Sub
 
 Sub splashVideo()
@@ -70,23 +69,24 @@ Sub splashVideo()
     player.SetMessagePort(messagePort)
     player.SetDestinationRect(canvas.GetCanvasRect())
     player.SetContentList([{
-        'Stream: {url: "https://dl.dropboxusercontent.com/s/npvg30ydmul6uhd/SeaviewAnimeIntro1.mp4"}
-        'Stream: {url: "http://video.ted.com/talks/podcast/Naturally7FLYBABY_2009_480.mp4"}
         Stream: {url: "pkg:/videos/SeaviewAnimeIntro1.mp4"}
         StreamFormat: "mp4"
     }])
     player.Play()
+
     while true
         msg = wait(0, messagePort)
         if type(msg) = "roVideoPlayerEvent" then
             if msg.isFullResult() then
-                Debug("Video ended")
-                wait(5, messagePort)
+                controller = createViewController()
+                controller.Show()
+                player.Stop()
                 canvas.close()
                 exit while
-            end if
-        end if
+           end if
+       end if
     end while
+
 End Sub
 
 Sub initGlobals()
