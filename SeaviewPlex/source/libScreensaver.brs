@@ -179,8 +179,8 @@ Function screensaverLib_SmoothAnimation(scr, image_width, image_height, loc)
     ' Pick a random start location
     if (loc = invalid) then
         loc = screensaverLib_RandomLocation(scr,image_width,image_height,invalid)
-        loc.velocity_x=1
-        loc.velocity_y=1
+        loc.velocity_x=3
+        loc.velocity_y=3
     end if
 
     ' Check for outer edge collision

@@ -239,7 +239,7 @@ Function createPreferencesScreen(viewController) As Object
     obj.Prefs["screensaver"] = {
         values: screensaver,
         heading: "Screensaver",
-        default: "random"
+        default: "animated"
     }
 
     obj.checkMyPlexOnActivate = false
@@ -606,7 +606,7 @@ Function createAdvancedPrefsScreen(viewController) As Object
     obj.Prefs["continuous_play"] = {
         values: continuous_play,
         heading: "Automatically start playing the next video",
-        default: "0"
+        default: "1"
     }
 
     ' H.264 Level

@@ -13,7 +13,7 @@ End Sub
 
 Sub DisplayScreenSaver(mode)
     if GetGlobal("IsHD") then
-        m.default_screensaver = {url:"pkg:/images/screensaver-hd.png", SourceRect:{w:336,h:210}, TargetRect:{x:0,y:0}}
+        m.default_screensaver = {url:"pkg:/images/screensaver-hd.png", SourceRect:{w:300,h:281}, TargetRect:{x:0,y:0}}
     else
         m.default_screensaver = {url:"pkg:/images/screensaver-sd.png", SourceRect:{w:248,h:140}, TargetRect:{x:0,y:0}}
     end if
