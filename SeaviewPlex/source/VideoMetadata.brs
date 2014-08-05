@@ -68,7 +68,7 @@ End Function
 Sub setVideoBasics(video, container, item)
     video.viewOffset = item@viewOffset
     video.viewCount = item@viewCount
-    video.Watched = video.viewCount <> invalid AND val(video.viewCount) > 0
+    video.Watched = false
 
     video.ShortDescriptionLine1 = firstOf(item@title, item@name, "")
 

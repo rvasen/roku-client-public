@@ -57,6 +57,7 @@ Sub Main(args)
 
     'play animation and then prepare the screen for display and get ready to begin
     controller = splashVideo()
+    'controller = createViewController()
     controller.Show()
 End Sub
 

@@ -39,16 +39,6 @@ Sub videoSetupButtons()
     Debug("Can direct play = " + tostr(videoCanDirectPlay(m.media)))
 
     supportedIdentifier = (m.metadata.mediaContainerIdentifier = "com.plexapp.plugins.library" OR m.metadata.mediaContainerIdentifier = "com.plexapp.plugins.myplex")
-    if supportedIdentifier then
-        if m.metadata.viewCount <> invalid AND val(m.metadata.viewCount) > 0 then
-            m.AddButton("Mark as unwatched", "unscrobble")
-        else
-            if m.metadata.viewOffset <> invalid AND val(m.metadata.viewOffset) > 0 then
-                m.AddButton("Mark as unwatched", "unscrobble")
-            end if
-            m.AddButton("Mark as watched", "scrobble")
-        end if
-    end if
 
     if m.metadata.mediaContainerIdentifier = "com.plexapp.plugins.myplex" AND m.metadata.id <> invalid then
         m.AddButton("Delete from queue", "delete")
@@ -56,24 +46,6 @@ Sub videoSetupButtons()
 
     m.AddButton("Playback options", "options")
 
-    if supportedIdentifier then
-        if m.metadata.UserRating = invalid then
-            m.metadata.UserRating = 0
-        endif
-        if m.metadata.StarRating = invalid then
-            m.metadata.StarRating = 0
-        endif
-
-        ' When delete is present we don't have enough room so we stuff delete
-        ' and rate in a separate dialog.
-        ' RR - when grandparentKey is present - we don't have enough room
-        ' either. We present 'Show All Seasons' and 'Show Season #'
-        if m.metadata.server.AllowsMediaDeletion OR m.metadata.grandparentKey <> invalid then
-            m.AddButton("More...", "more")
-        else
-            m.AddRatingButton(m.metadata.UserRating, m.metadata.StarRating, "rateVideo")
-        end if
-    end if
 End Sub
 
 Sub videoGetMediaDetails(content)

@@ -431,9 +431,9 @@ Sub homeOnUrlEvent(msg, requestContext)
                     add = false
                 end if
             else if item.Type = "movie" then
-                item.ShortDescriptionLine2 = "Movie section" + serverStr
+                item.ShortDescriptionLine2 = "" + serverStr
             else if item.Type = "show" then
-                item.ShortDescriptionLine2 = "TV section" + serverStr
+                item.ShortDescriptionLine2 = "" + serverStr
             else if item.Type = "artist" then
                 item.ShortDescriptionLine2 = "Music section" + serverStr
             else if item.Type = "photo" then
@@ -738,8 +738,6 @@ Sub homeRefreshData()
         m.CreateServerRequests(server, true, true)
     next
 
-    ' Clear any screensaver images, use the default.
-    SaveImagesForScreenSaver(invalid, {})
 End Sub
 
 Sub homeOnMyPlexChange()
